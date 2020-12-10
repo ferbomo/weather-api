@@ -1,5 +1,5 @@
 # Weather service
-Please create a Web Application which should:  Accept a city name via REST API 
+Please create a Web Application which should: Accept a city name via REST API 
 
 Get the current weather for the city name using the OpenWeather API.
 
