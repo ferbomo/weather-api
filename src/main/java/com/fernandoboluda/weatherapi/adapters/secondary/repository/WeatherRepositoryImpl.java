@@ -3,6 +3,7 @@ package com.fernandoboluda.weatherapi.adapters.secondary.repository;
 import com.fernandoboluda.weatherapi.adapters.secondary.repository.dto.WeatherServiceResponse;
 import com.fernandoboluda.weatherapi.converters.WeatherDtoToWeatherConverter;
 import com.fernandoboluda.weatherapi.domain.entities.Weather;
+import com.fernandoboluda.weatherapi.domain.exception.WeatherRepositoryException;
 import com.fernandoboluda.weatherapi.domain.valueobject.SearchCriteria;
 import com.fernandoboluda.weatherapi.ports.secondary.WeatherRepository;
 import lombok.AllArgsConstructor;
@@ -20,16 +21,15 @@ import java.util.Objects;
 public class WeatherRepositoryImpl implements WeatherRepository {
 
   private static final String REST_URI = "http://api.openweathermap.org/data/2.5/weather?appid="
-      + "c2395dafd752b24690e1cdd50b5a6972&units=metric";
+      + "c2395dafd752b24690e1cdd50b5a6972&units=metric&q=";
   private final WeatherDtoToWeatherConverter converter;
   private final RestTemplate client;
 
   @Override
   @Cacheable(value = "weathers")
-  public Weather getWeather(SearchCriteria searchCriteria) {
+  public Weather getWeather(SearchCriteria searchCriteria) throws WeatherRepositoryException {
 
-    String uri = REST_URI + "&q=" + searchCriteria.getCityName();
-    Weather weather = null;
+    String uri = REST_URI + searchCriteria.getCityName();
     try {
       log.info("Getting weather info for {}", searchCriteria.getCityName());
       ResponseEntity<WeatherServiceResponse> response = client
@@ -39,10 +39,10 @@ public class WeatherRepositoryImpl implements WeatherRepository {
         return converter.convert(Objects.requireNonNull(weatherServiceResponse));
       }
       log.error("Can't retrieve international model. Status code: " + response.getStatusCode());
-      return new Weather("", 0.0, 0.0);
+      throw new WeatherRepositoryException(response.getStatusCode().toString());
     } catch (RestClientException ex) {
       log.error("Can't retrieve weather response: " + ex.getMessage());
+      throw new WeatherRepositoryException(ex.getMessage());
     }
-    return weather;
   }
 }

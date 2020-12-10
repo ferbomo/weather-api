@@ -5,6 +5,12 @@ import com.fernandoboluda.weatherapi.domain.entities.Weather;
 
 public class WeatherToWeatherResponseConverter {
 
+  /**
+   * Converts a Weather instance to a WeatherResponse.
+   *
+   * @param weather A Weather input.
+   * @return A WeatherResponse instance.
+   */
   public WeatherResponse convert(Weather weather) {
     return WeatherResponse.builder()
         .description(weather.getDescription())

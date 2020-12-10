@@ -1,5 +1,6 @@
 package com.fernandoboluda.weatherapi.adapters.primary.rest;
 
+import com.fernandoboluda.weatherapi.domain.exception.WeatherRepositoryException;
 import com.fernandoboluda.weatherapi.domain.valueobject.SearchCriteria;
 import com.fernandoboluda.weatherapi.ports.primary.WeatherApplication;
 import lombok.AllArgsConstructor;
@@ -18,14 +19,20 @@ public class WeatherController {
   private final WeatherApplication weatherApplication;
 
   @GetMapping
-  public ResponseEntity getWeather(@RequestParam String cityName) {
+  public ResponseEntity<?> getWeather(@RequestParam String cityName) {
     if (cityName == null || cityName.isEmpty()) {
       return ResponseEntity
           .status(HttpStatus.BAD_REQUEST)
           .body("City name is mandatory");
     }
-    return ResponseEntity
-        .ok(weatherApplication.getWeatherByCityName(createSearchCriteria(cityName)));
+    try {
+      return ResponseEntity
+          .ok(weatherApplication.getWeatherByCityName(createSearchCriteria(cityName)));
+    } catch (WeatherRepositoryException ex) {
+      return ResponseEntity
+          .status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body(ex.getMessage());
+    }
   }
 
   private SearchCriteria createSearchCriteria(String city) {

@@ -1,11 +1,12 @@
 package com.fernandoboluda.weatherapi.adapters.secondary.repository.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.JsonNode;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @Builder
@@ -15,7 +16,7 @@ public class WeatherServiceResponse {
 
   private Coordinates coord;
   @JsonProperty("weather")
-  private JsonNode weather;
+  private List<Weather> weatherList;
   private String base;
   private Main main;
   private int visibility;

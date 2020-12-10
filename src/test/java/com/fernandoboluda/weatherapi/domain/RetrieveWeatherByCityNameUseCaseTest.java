@@ -3,12 +3,12 @@ package com.fernandoboluda.weatherapi.domain;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.when;
 
 import com.fernandoboluda.weatherapi.adapters.primary.rest.model.WeatherResponse;
 import com.fernandoboluda.weatherapi.converters.WeatherToWeatherResponseConverter;
 import com.fernandoboluda.weatherapi.domain.entities.Weather;
+import com.fernandoboluda.weatherapi.domain.exception.WeatherRepositoryException;
 import com.fernandoboluda.weatherapi.domain.valueobject.SearchCriteria;
 import com.fernandoboluda.weatherapi.fixture.CriteriaFixture;
 import com.fernandoboluda.weatherapi.fixture.WeatherFixture;
@@ -19,7 +19,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 
 @ExtendWith(MockitoExtension.class)
 class RetrieveWeatherByCityNameUseCaseTest {
@@ -32,7 +31,7 @@ class RetrieveWeatherByCityNameUseCaseTest {
   private RetrieveWeatherByCityNameUseCase target;
 
   @Test
-  void shouldReturnWeather(){
+  void shouldReturnWeather() throws WeatherRepositoryException {
     SearchCriteria criteria = CriteriaFixture.create("Madrid");
     Weather weather = WeatherFixture.create("clear sky", 5.76, 0.48);
     when(repository.getWeather(criteria)).thenReturn(weather);
