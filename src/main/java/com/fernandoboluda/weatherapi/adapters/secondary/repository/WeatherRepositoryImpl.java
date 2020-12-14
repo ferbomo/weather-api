@@ -19,7 +19,7 @@ import java.util.Objects;
 @Slf4j
 @AllArgsConstructor
 public class WeatherRepositoryImpl implements WeatherRepository {
-
+//TODO : Get appId by config.
   private static final String REST_URI = "http://api.openweathermap.org/data/2.5/weather?appid="
       + "c2395dafd752b24690e1cdd50b5a6972&units=metric&q=";
   private final WeatherDtoToWeatherConverter converter;
